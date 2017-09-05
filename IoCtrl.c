@@ -16,6 +16,8 @@
 
 static int IoCtrl_major = MEMDEV_MAJOR;
 
+static uint32_t * bcm2835_gpio;
+
 module_param(IoCtrl_major, int, S_IRUGO);
 
 struct cdev cdev;
@@ -89,6 +91,11 @@ static const struct file_operations mem_fops =
 
 static int IoCtrl_init(void)
 {
+	bcm2835_gpio = (volatile uint32_t *)ioremap(BCM2835_GPIO_ADDRESS_START, BCM2835_GPIO_ADDRESS_LEN);
+	if(!bcm2835_gpio)
+	{  
+       		return -EIO;  
+   	}
 	return 0;
 
 }
@@ -97,6 +104,8 @@ static void IoCtrl_exit(void)
 {
 	cdev_del(&cdev); /*注销设备号*/
 	unregister_chrdev_region(MKDEV(mem_major,0),2);
+	iounmap(bcm2835_gpio);
+	printk("loCtrl device uninstalled\n");
 }
 
 MODULE_AUTHOR("Spice");
