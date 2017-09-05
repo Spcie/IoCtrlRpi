@@ -2,11 +2,12 @@
 #define __HW_GPIO_H
 
 #define PIN					26 //GPIO26 
-#define BCM2835_GPIO_BASE           0x3f200000  
-#define BCM2835_GPSET0              0x001c  
-#define BCM2835_GPFSEL0             0x0000  
-#define BCM2835_GPCLR0              0x0028  
-#define BCM2835_GPIO_FSEL_OUTP      1  
+#define BCM2835_GPIO_ADDRESS_START           0x3f200000
+#define BCM2835_GPIO_ADDRESS_END             0x3f2000b3  
+#define BCM2835_GPSET0                       0x001c  
+#define BCM2835_GPFSEL0                      0x0000  
+#define BCM2835_GPCLR0                       0x0028  
+#define BCM2835_GPIO_FSEL_OUTP               1  
   
 
 
