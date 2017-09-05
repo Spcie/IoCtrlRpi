@@ -14,7 +14,7 @@
 #include "IoCtrl.h"
 #include "hw_gpio.h"
 
-static int IoCtrl_major = MEMDEV_MAJOR;
+static int IoCtrl_major = IOCTRL_MAJOR;
 
 static uint32_t * bcm2835_gpio;
 
@@ -73,12 +73,13 @@ int IoCtrl_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
 	switch(cmd)
 	{
 		case IOCTRL_ON : break;
-		case IOCTRL_OFF :break;
-		default:break;
+		case IOCTRL_OFF : break;
+		default:
+			return -EINVAL;
 	}
 	return 0;
 }
-static const struct file_operations mem_fops = 
+static const struct file_operations IoCtrl_fops = 
 {
 	.owner = THIS_MODULE,
 	.llseek = IoCtrl_llseek,
@@ -91,20 +92,52 @@ static const struct file_operations mem_fops =
 
 static int IoCtrl_init(void)
 {
+	int result;
+	int i;
+
+	dev_t devno = MKDEV(IoCtrl_major,0);
+
+	if (IoCtrl_major)
+	{
+		/*静态申请设备号*/
+		result = register_chrdev_region(devno,2,"IoCtrl");
+	}else
+	{
+		/*动态申请设备号*/
+		result = alloc_chrdev_region(&devno,0,2,"IoCtrl");
+		IoCtrl_major = MAJOR(devno);
+	}
+	
+	if (result<0) return result;
+	
+	/*初始化cdev结构*/
+	cdev_init(&cdev,&IoCtrl_fops);
+	cdev.owner = THIS_MODULE;
+	cdev.ops = &IoCtrl_fops;
+	
+	/*注册字符设备*/
+	cdev_add(&cdev, MKDEV(IoCtrl_major, 0), IOCTRL_NR_DEVS);
+	
+	/*映射GPIO地址*/
 	bcm2835_gpio = (volatile uint32_t *)ioremap(BCM2835_GPIO_ADDRESS_START, BCM2835_GPIO_ADDRESS_LEN);
 	if(!bcm2835_gpio)
-	{  
-       		return -EIO;  
-   	}
+	{
+		unregister_chrdev_region(devno,1);
+		return -EIO;
+	}
 	return 0;
 
 }
 
 static void IoCtrl_exit(void)
 {
-	cdev_del(&cdev); /*注销设备号*/
-	unregister_chrdev_region(MKDEV(mem_major,0),2);
+	/*取消映射*/
 	iounmap(bcm2835_gpio);
+	
+	/*注销设备号*/
+	cdev_del(&cdev); 
+	unregister_chrdev_region(MKDEV(IoCtrl_major,0),2);
+	
 	printk("loCtrl device uninstalled\n");
 }
 

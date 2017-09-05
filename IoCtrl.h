@@ -6,7 +6,7 @@
 #endif
 
 #ifndef IOCTRL_NR_DEVS
-#define IOCTRL_NR_DEVS 2
+#define IOCTRL_NR_DEVS 2    //可能为1更好
 #endif
 
 
