@@ -12,6 +12,7 @@
 #include <asm/uaccess.h>
 
 #include "IoCtrl.h"
+#include "hw_gpio.h"
 
 static int IoCtrl_major = MEMDEV_MAJOR;
 
