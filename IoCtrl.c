@@ -68,6 +68,12 @@ static loff_t IoCtrl_llseek(struct file *filp, loff_t offset, int whence)
 
 int IoCtrl_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
 {
+	switch(cmd)
+	{
+		case IOCTRL_ON : break;
+		case IOCTRL_OFF :break;
+		default:break;
+	}
 	return 0;
 }
 static const struct file_operations mem_fops = 
