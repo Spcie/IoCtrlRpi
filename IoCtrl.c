@@ -2,6 +2,7 @@
 #include <linux/types.h>
 #include <linux/fs.h>
 #include <linux/errno.h>
+//#include <linux/slab.h>
 #include <linux/mm.h>
 #include <linux/sched.h>
 #include <linux/init.h>
@@ -27,18 +28,6 @@ int IoCtrl_release(struct inode * inode, struct file *filp);
 
 int IoCtrl_open(struct inode * inode,struct file *filp)
 {
-	struct  mem_dev *dev;
-
-	/*获取次设备号*/
-	int num = MINOR(inode->i_rdev);
-
-	if(num >= IOCTRL_NR_DEVS) return -ENODEV;
-
-	dev = &mem_devp[num];
-
-	/*将设备描述符指针赋值给文件私有数据指针*/
-	filp->private_data = dev;
-
 	return 0;
 }
 
@@ -68,8 +57,9 @@ static loff_t IoCtrl_llseek(struct file *filp, loff_t offset, int whence)
 	return 0;
 }
 
-int IoCtrl_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
+int IoC_ioctl(struct file*filp,unsigned int cmd,unsigned long arg)
 {
+	/*
 	switch(cmd)
 	{
 		case IOCTRL_ON : break;
@@ -77,6 +67,7 @@ int IoCtrl_ioctl(struct file *filp,unsigned int cmd,unsigned long arg)
 		default:
 			return -EINVAL;
 	}
+	*/
 	return 0;
 }
 static const struct file_operations IoCtrl_fops = 
@@ -87,7 +78,7 @@ static const struct file_operations IoCtrl_fops =
 	.write = IoCtrl_write,
 	.open = IoCtrl_open,
 	.release = IoCtrl_release,
-	.unlocked_ioctl = IoCtrl_ioctl,
+	.unlocked_ioctl = IoC_ioctl,
 };
 
 static int IoCtrl_init(void)

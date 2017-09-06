@@ -15,7 +15,7 @@
 
 /*定义命令*/
 #define IOCTRL_ON _IO(IOCTRL_IOC_MAGIC,1)
-#define IOCTRL_OFF _IO(IOCTRL_IOC_MAGIC,2,int)
+#define IOCTRL_OFF _IO(IOCTRL_IOC_MAGIC,2)
 
 
 
