@@ -1,1 +1,0 @@
-cmd_/home/pi/gitcode/IoCtrlRpi/IoCtrl.ko := ld -EL -r  -T ./scripts/module-common.lds --build-id  -o /home/pi/gitcode/IoCtrlRpi/IoCtrl.ko /home/pi/gitcode/IoCtrlRpi/IoCtrl.o /home/pi/gitcode/IoCtrlRpi/IoCtrl.mod.o ;  true
