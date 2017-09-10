@@ -39,6 +39,8 @@ int IoCtrl_release(struct inode * inode, struct file *filp)
 static ssize_t IoCtrl_read(struct file *filp, char __user *buf, size_t size, loff_t *ppos)
 {
 	int ret = 0;
+	bcm2835_gpio_fsel(PIN,BCM2835_GPIO_FSEL_OUTP)
+	bcm2835_gpio_clr(pin);
 
 	return ret;
 }
@@ -48,7 +50,8 @@ static ssize_t IoCtrl_write(struct file *filp, const char __user *buf, size_t si
 
 	int ret = 0;
 
-
+	bcm2835_gpio_fsel(PIN,BCM2835_GPIO_FSEL_OUTP)
+	bcm2835_gpio_set(pin);
 	return ret;
 }
 
