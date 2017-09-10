@@ -8,7 +8,7 @@ int bcm2835_gpio_fsel(uint8_t pin, uint8_t mode)
 	uint8_t   shift = (pin % 10) * 3;
 	uint32_t  value = mode << shift;
 	*bcm2835_gpio_fsel = *bcm2835_gpio_fsel | value;
-
+	return 0;
 }
 
 int bcm2835_gpio_set(uint8_t pin)
@@ -32,3 +32,4 @@ int bcm2835_gpio_clr(uint8_t pin)
 
 	return 0;
 }
+

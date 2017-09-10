@@ -100,8 +100,11 @@ static int IoCtrl_init(void)
 		IoCtrl_major = MAJOR(devno);
 	}
 	
-	if (result<0) return result;
-	
+	if (result<0)
+	{
+		printk(KERN_INFO"allow devno fail \n");
+		return result;
+	}	
 	/*初始化cdev结构*/
 	cdev_init(&cdev,&IoCtrl_fops);
 	cdev.owner = THIS_MODULE;
@@ -113,10 +116,13 @@ static int IoCtrl_init(void)
 	/*映射GPIO地址*/
 	bcm2835_gpio = (volatile uint32_t *)ioremap(BCM2835_GPIO_ADDRESS_START, BCM2835_GPIO_ADDRESS_LEN);
 	if(!bcm2835_gpio)
-	{
+	{	
+		printk(KERN_INFO"gpio map fail \n");
 		unregister_chrdev_region(devno,1);
 		return -EIO;
 	}
+
+	printk("loCtrl device installed\n");
 	return 0;
 
 }

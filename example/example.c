@@ -10,8 +10,6 @@ int main(void)
 	FILE *fb0 = NULL;
 	char Buf[256];
 
-	printf("BUF:%s\n", Buf);
-
 	fb0 = fopen("/dev/IoCtrl", "r+");
 
 	if(fb0 == NULL)
