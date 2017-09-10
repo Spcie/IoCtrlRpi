@@ -2,14 +2,14 @@
 #include <linux/types.h>
 #include <linux/fs.h>
 #include <linux/errno.h>
-//#include <linux/slab.h>
+#include <linux/slab.h>
 #include <linux/mm.h>
 #include <linux/sched.h>
 #include <linux/init.h>
 #include <linux/cdev.h>
 #include <linux/slab.h>
 #include <asm/io.h>
-//#include <asm/system.h>
+#include <asm/system.h>
 #include <asm/uaccess.h>
 
 #include "IoCtrl.h"
@@ -39,8 +39,8 @@ int IoCtrl_release(struct inode * inode, struct file *filp)
 static ssize_t IoCtrl_read(struct file *filp, char __user *buf, size_t size, loff_t *ppos)
 {
 	int ret = 0;
-	bcm2835_gpio_fsel(PIN,BCM2835_GPIO_FSEL_OUTP)
-	bcm2835_gpio_clr(pin);
+	bcm2835_gpio_fsel(PIN,BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_clr(PIN);
 
 	return ret;
 }
@@ -50,8 +50,8 @@ static ssize_t IoCtrl_write(struct file *filp, const char __user *buf, size_t si
 
 	int ret = 0;
 
-	bcm2835_gpio_fsel(PIN,BCM2835_GPIO_FSEL_OUTP)
-	bcm2835_gpio_set(pin);
+	bcm2835_gpio_fsel(PIN,BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_set(PIN);
 	return ret;
 }
 
@@ -140,3 +140,4 @@ MODULE_LICENSE("GPL");
 
 module_init(IoCtrl_init);
 module_exit(IoCtrl_exit);
+
