@@ -17,8 +17,6 @@
 
 static int IoCtrl_major = IOCTRL_MAJOR;
 
-static uint32_t * bcm2835_gpio;
-
 module_param(IoCtrl_major, int, S_IRUGO);
 
 struct cdev cdev;

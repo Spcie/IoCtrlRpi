@@ -25,6 +25,10 @@ typedef uint16_t uintptr_t;
 #define BCM2835_GPIO_FSEL_OUTP				0x01
 #define BCM2835_GPIO_FSEL_INP				0x00
 
+
+
+extern uint32_t * bcm2835_gpio;
+
 int bcm2835_gpio_fsel(uint8_t pin, uint8_t mode);
 int bcm2835_gpio_set(uint8_t pin);
 int bcm2835_gpio_clr(uint8_t pin);

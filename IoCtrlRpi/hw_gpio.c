@@ -1,4 +1,7 @@
 #include "hw_gpio.h"
+
+uint32_t * bcm2835_gpio;
+
 int bcm2835_gpio_fsel(uint8_t pin, uint8_t mode)
 {
 	volatile uint32_t * bcm2835_gpio_fsel = bcm2835_gpio + BCM2835_GPFSEL0/4 + (pin/10);
