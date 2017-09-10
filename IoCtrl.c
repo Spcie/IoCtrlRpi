@@ -57,9 +57,9 @@ static loff_t IoCtrl_llseek(struct file *filp, loff_t offset, int whence)
 	return 0;
 }
 
-int IoC_ioctl(struct file*filp,unsigned int cmd,unsigned long arg)
+long IoC_ioctl(struct file*filp,unsigned int cmd,unsigned long arg)
 {
-	/*
+	
 	switch(cmd)
 	{
 		case IOCTRL_ON : break;
@@ -67,7 +67,7 @@ int IoC_ioctl(struct file*filp,unsigned int cmd,unsigned long arg)
 		default:
 			return -EINVAL;
 	}
-	*/
+	
 	return 0;
 }
 static const struct file_operations IoCtrl_fops = 
