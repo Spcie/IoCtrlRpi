@@ -85,16 +85,15 @@ struct miscdevice misc_dev =
 {
 	.minor = 50,
 	.fops = &IoCtrl_fops,
-	.name = "msic_test"
+	.name = "msic_IoCtrl"
 };
 
 static int IoCtrl_init(void)
 {
 	int result;
-	int i;
 
 	printk("----- misc test init-----\n");
-	ret = misc_register(&misc);
+	ret = misc_register(&misc_dev);
 	/*映射GPIO地址*/
 	bcm2835_gpio = (volatile uint32_t *)ioremap(BCM2835_GPIO_ADDRESS_START, BCM2835_GPIO_ADDRESS_LEN);
 	if(!bcm2835_gpio)
@@ -114,7 +113,7 @@ static void IoCtrl_exit(void)
 	iounmap(bcm2835_gpio);
 	
 	/*注销设备号*/
-	misc_deregister(&misc);
+	misc_deregister(&misc_dev);
 	
 	printk("loCtrl device uninstalled\n");
 }
