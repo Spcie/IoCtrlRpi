@@ -1,3 +1,17 @@
+#include <linux/module.h>
+#include <linux/types.h>
+#include <linux/fs.h>
+#include <linux/errno.h>
+#include <linux/slab.h>
+#include <linux/mm.h>
+#include <linux/sched.h>
+#include <linux/init.h>
+#include <linux/cdev.h>
+#include <linux/slab.h>
+#include <asm/io.h>
+#include <asm/system.h>
+#include <asm/uaccess.h>
+
 #include "hw_gpio.h"
 
 uint32_t * bcm2835_gpio;
@@ -33,3 +47,5 @@ int bcm2835_gpio_clr(uint8_t pin)
 	return 0;
 }
 
+MODULE_AUTHOR("Spice");
+MODULE_LICENSE("GPL");
