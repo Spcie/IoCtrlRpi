@@ -13,13 +13,69 @@
 #include <asm/uaccess.h>
 
 #include "IoCtrl.h"
-#include "hw_gpio.h"
+//#include "hw_gpio.h"
+typedef signed char int8_t;
+typedef unsigned char uint8_t;
+
+typedef int int16_t;
+typedef unsigned int uint16_t;
+
+typedef long int32_t;
+typedef unsigned long uint32_t;
+
+typedef long long int64_t;
+typedef unsigned long long uint64_t;
+
+typedef int16_t intptr_t;
+typedef uint16_t uintptr_t;
+
+#define PIN									26 //GPIO26 
+#define BCM2835_GPIO_ADDRESS_START			0x3f200000
+#define BCM2835_GPIO_ADDRESS_END			0x3f2000b3
+#define BCM2835_GPIO_ADDRESS_LEN			(BCM2835_GPIO_ADDRESS_END - BCM2835_GPIO_ADDRESS_START)
+#define BCM2835_GPSET0						0x001c
+#define BCM2835_GPFSEL0						0x0000
+#define BCM2835_GPCLR0						0x0028
+#define BCM2835_GPIO_FSEL_OUTP				0x01
+#define BCM2835_GPIO_FSEL_INP				0x00
 
 static int IoCtrl_major = IOCTRL_MAJOR;
 
 module_param(IoCtrl_major, int, S_IRUGO);
 
 struct cdev cdev;
+uint32_t * bcm2835_gpio;
+
+int bcm2835_gpio_fsel(uint8_t pin, uint8_t mode)
+{
+	volatile uint32_t * bcm2835_gpio_fsel = bcm2835_gpio + BCM2835_GPFSEL0/4 + (pin/10);
+	uint8_t   shift = (pin % 10) * 3;
+	uint32_t  value = mode << shift;
+	*bcm2835_gpio_fsel = *bcm2835_gpio_fsel | value;
+	return 0;
+}
+
+int bcm2835_gpio_set(uint8_t pin)
+{
+	volatile uint32_t * bcm2835_gpio_set = bcm2835_gpio + BCM2835_GPSET0/4 + pin/32;
+	uint8_t   shift = pin % 32;
+	uint32_t  value = 1 << shift;
+	*bcm2835_gpio_set = *bcm2835_gpio_set | value;
+
+
+	return 0;
+}
+
+int bcm2835_gpio_clr(uint8_t pin)
+{
+	volatile uint32_t * bcm2835_gpio_clr = bcm2835_gpio + BCM2835_GPCLR0/4 + pin/32;
+	uint8_t   shift = pin % 32;
+	uint32_t  value = 1 << shift;
+	*bcm2835_gpio_clr = *bcm2835_gpio_clr | value;
+
+
+	return 0;
+}
 
 int IoCtrl_open(struct inode * inode,struct file *filp);
 int IoCtrl_release(struct inode * inode, struct file *filp);
