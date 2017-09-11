@@ -81,44 +81,25 @@ static const struct file_operations IoCtrl_fops =
 	.release = IoCtrl_release,
 	.unlocked_ioctl = IoC_ioctl,
 };
+struct miscdevice misc_dev =
+{
+	.minor = 50,
+	.fops = &IoCtrl_fops,
+	.name = "msic_test"
+};
 
 static int IoCtrl_init(void)
 {
 	int result;
 	int i;
 
-	dev_t devno = MKDEV(IoCtrl_major,0);
-
-	if (IoCtrl_major)
-	{
-		/*静态申请设备号*/
-		result = register_chrdev_region(devno,2,"IoCtrl");
-	}else
-	{
-		/*动态申请设备号*/
-		result = alloc_chrdev_region(&devno,0,2,"IoCtrl");
-		IoCtrl_major = MAJOR(devno);
-	}
-	
-	if (result<0)
-	{
-		printk(KERN_INFO"allow devno fail \n");
-		return result;
-	}	
-	/*初始化cdev结构*/
-	cdev_init(&cdev,&IoCtrl_fops);
-	cdev.owner = THIS_MODULE;
-	cdev.ops = &IoCtrl_fops;
-	
-	/*注册字符设备*/
-	cdev_add(&cdev, MKDEV(IoCtrl_major, 0), IOCTRL_NR_DEVS);
-	
+	printk("----- misc test init-----\n");
+	ret = misc_register(&misc);
 	/*映射GPIO地址*/
 	bcm2835_gpio = (volatile uint32_t *)ioremap(BCM2835_GPIO_ADDRESS_START, BCM2835_GPIO_ADDRESS_LEN);
 	if(!bcm2835_gpio)
 	{	
 		printk(KERN_INFO"gpio map fail \n");
-		unregister_chrdev_region(devno,1);
 		return -EIO;
 	}
 
@@ -133,8 +114,7 @@ static void IoCtrl_exit(void)
 	iounmap(bcm2835_gpio);
 	
 	/*注销设备号*/
-	cdev_del(&cdev); 
-	unregister_chrdev_region(MKDEV(IoCtrl_major,0),2);
+	misc_deregister(&misc);
 	
 	printk("loCtrl device uninstalled\n");
 }
