@@ -9,7 +9,8 @@
 #include <linux/cdev.h>
 #include <linux/slab.h>
 #include <asm/io.h>
-#include <asm/system.h>
+#include <linux/miscdevice.h>
+//#include <asm/system.h>
 #include <asm/uaccess.h>
 
 #include "IoCtrl.h"
@@ -137,7 +138,7 @@ static int IoCtrl_init(void)
 	printk("----- misc test init-----\n");
 	result = misc_register(&misc_dev);
 	/*映射GPIO地址*/
-	bcm2835_gpio = (volatile uint32_t *)ioremap(BCM2835_GPIO_ADDRESS_START, BCM2835_GPIO_ADDRESS_LEN);
+	bcm2835_gpio = (volatile unsigned long *)ioremap(BCM2835_GPIO_ADDRESS_START, BCM2835_GPIO_ADDRESS_LEN);
 	if(!bcm2835_gpio)
 	{	
 		printk(KERN_INFO"gpio map fail \n");
