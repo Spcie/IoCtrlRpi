@@ -135,7 +135,7 @@ static int IoCtrl_init(void)
 	int result;
 
 	printk("----- misc test init-----\n");
-	ret = misc_register(&misc_dev);
+	result = misc_register(&misc_dev);
 	/*映射GPIO地址*/
 	bcm2835_gpio = (volatile uint32_t *)ioremap(BCM2835_GPIO_ADDRESS_START, BCM2835_GPIO_ADDRESS_LEN);
 	if(!bcm2835_gpio)
