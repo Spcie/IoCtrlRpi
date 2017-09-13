@@ -1,7 +1,7 @@
 ifneq ($(KERNELRELEASE),)
 
-obj-m := IoC.o
-IoC-objs :=hw_gpio.o IoCtrl.o
+obj-m := IoCtrl.o
+#IoC-objs :=hw_gpio.o IoCtrl.o
 else
 
 
