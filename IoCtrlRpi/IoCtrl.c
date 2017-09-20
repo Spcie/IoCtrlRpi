@@ -16,16 +16,6 @@
 #include "IoCtrl.h"
 #include "hw_gpio.h"
 
-#define PIN									26 //GPIO26 
-#define BCM2835_GPIO_ADDRESS_START			0x3f200000
-#define BCM2835_GPIO_ADDRESS_END			0x3f2000b3
-#define BCM2835_GPIO_ADDRESS_LEN			(BCM2835_GPIO_ADDRESS_END - BCM2835_GPIO_ADDRESS_START)
-#define BCM2835_GPSET0						0x001c
-#define BCM2835_GPFSEL0						0x0000
-#define BCM2835_GPCLR0						0x0028
-#define BCM2835_GPIO_FSEL_OUTP				0x01
-#define BCM2835_GPIO_FSEL_INP				0x00
-
 static int IoCtrl_major = IOCTRL_MAJOR;
 
 module_param(IoCtrl_major, int, S_IRUGO);
