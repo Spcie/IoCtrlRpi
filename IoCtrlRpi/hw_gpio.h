@@ -13,7 +13,7 @@
 
 
 
-extern uint32_t * bcm2835_gpio;
+extern unsigned long * bcm2835_gpio;
 
 int bcm2835_gpio_fsel(uint8_t pin, uint8_t mode);
 int bcm2835_gpio_set(uint8_t pin);
