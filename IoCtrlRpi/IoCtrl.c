@@ -14,7 +14,7 @@
 #include <asm/uaccess.h>
 
 #include "IoCtrl.h"
-//#include "hw_gpio.h"
+#include "hw_gpio.h"
 
 #define PIN									26 //GPIO26 
 #define BCM2835_GPIO_ADDRESS_START			0x3f200000
@@ -31,38 +31,6 @@ static int IoCtrl_major = IOCTRL_MAJOR;
 module_param(IoCtrl_major, int, S_IRUGO);
 
 struct cdev cdev;
-unsigned long * bcm2835_gpio;
-
-int bcm2835_gpio_fsel(unsigned char pin, unsigned char mode)
-{
-	volatile unsigned long * bcm2835_gpio_fsel = bcm2835_gpio + BCM2835_GPFSEL0/4 + (pin/10);
-	unsigned char   shift = (pin % 10) * 3;
-	unsigned long  value = mode << shift;
-	*bcm2835_gpio_fsel = *bcm2835_gpio_fsel | value;
-	return 0;
-}
-
-int bcm2835_gpio_set(unsigned char pin)
-{
-	volatile unsigned long * bcm2835_gpio_set = bcm2835_gpio + BCM2835_GPSET0/4 + pin/32;
-	unsigned char   shift = pin % 32;
-	unsigned long  value = 1 << shift;
-	*bcm2835_gpio_set = *bcm2835_gpio_set | value;
-
-
-	return 0;
-}
-
-int bcm2835_gpio_clr(unsigned char pin)
-{
-	volatile unsigned long * bcm2835_gpio_clr = bcm2835_gpio + BCM2835_GPCLR0/4 + pin/32;
-	unsigned char   shift = pin % 32;
-	unsigned long  value = 1 << shift;
-	*bcm2835_gpio_clr = *bcm2835_gpio_clr | value;
-
-
-	return 0;
-}
 
 int IoCtrl_open(struct inode * inode,struct file *filp);
 int IoCtrl_release(struct inode * inode, struct file *filp);
