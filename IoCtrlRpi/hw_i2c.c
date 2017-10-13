@@ -1,5 +1,5 @@
 
-#include "hw_iic.h"
+#include "hw_i2c.h"
 #include "hw_gpio.h"
 
 
@@ -7,6 +7,7 @@
 static volatile unsigned int *bcm_bsc_base;
 
 static int i2c_byte_wait_us = 0;
+
 static void bcm_i2c_set_bits(unsigned int RegOfst,unsigned int value);
 static void bcm_i2c_register_write_nb(unsigned int RegOfst,unsigned int value);
 static void bcm_i2c_register_write(unsigned int RegOfst,unsigned int value);
@@ -70,7 +71,7 @@ static void bcm_i2c_setSlaveAddress(unsigned char addr)
 
 static void bcm_i2c_setClockDivider(unsigned int divider)
 {
-	bcm2835_peri_write(BCM_BSC_DIV, divider&0xFF);
+	bcm_peri_write(BCM_BSC_DIV, divider&0xFF);
 	
 	i2c_byte_wait_us = ((float)divider / BCM_CORE_CLK_HZ) *  1000000 * 9;
 }
@@ -78,7 +79,7 @@ static void bcm_i2c_setClockDivider(unsigned int divider)
 static void bcm_i2c_setBaudRate(unsigned int baudrate)
 {
 	unsigned int divider;
-	divider = (BCM2835_CORE_CLK_HZ / baudrate) & 0xFFFE;
+	divider = (BCM_CORE_CLK_HZ / baudrate) & 0xFFFE;
 
 	bcm_i2c_setClockDivider( (unsigned int)divider );
 }
@@ -129,7 +130,7 @@ void bcm_i2c_write(const char * buf, unsigned int len)
 	// Enable device and start transfer
 	bcm_i2c_register_write(BCM_BSC_C,BCM_BSC_C_I2CEN | BCM_BSC_C_ST);
 
-	// Transfer is over when BCM2835_BSC_S_DONE
+	// Transfer is over when BCM_BSC_S_DONE
 	while(!(bcm_i2c_register_read(BCM_BSC_S) & BCM_BSC_S_DONE))
 	{
 		while(remaining &&(bcm_i2c_register_read(BCM_BSC_S) & BCM_BSC_S_TXD))
